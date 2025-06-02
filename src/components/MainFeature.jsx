@@ -192,8 +192,150 @@ const tabs = [
     { id: 'register', label: 'Register Patient', icon: 'UserPlus' },
     { id: 'search', label: 'Patient Records', icon: 'Search' },
     { id: 'analytics', label: 'Quick Stats', icon: 'BarChart3' },
-    { id: 'charts', label: 'Charts & Trends', icon: 'TrendingUp' }
+    { id: 'charts', label: 'Charts & Trends', icon: 'TrendingUp' },
+    { id: 'beds', label: 'Bed Management', icon: 'Bed' }
   ];
+
+  // Bed Management State
+  const [bedData, setBedData] = useState({
+    'ICU': {
+      name: 'Intensive Care Unit',
+      totalBeds: 20,
+      available: 5,
+      occupied: 12,
+      maintenance: 3,
+      beds: Array.from({ length: 20 }, (_, i) => ({
+        id: `ICU-${i + 1}`,
+        number: i + 1,
+        status: i < 12 ? 'occupied' : i < 17 ? 'available' : 'maintenance',
+        patient: i < 12 ? `Patient ${i + 1}` : null,
+        lastUpdated: new Date()
+      }))
+    },
+    'General': {
+      name: 'General Ward',
+      totalBeds: 50,
+      available: 18,
+      occupied: 28,
+      maintenance: 4,
+      beds: Array.from({ length: 50 }, (_, i) => ({
+        id: `GEN-${i + 1}`,
+        number: i + 1,
+        status: i < 28 ? 'occupied' : i < 46 ? 'available' : 'maintenance',
+        patient: i < 28 ? `Patient ${i + 1}` : null,
+        lastUpdated: new Date()
+      }))
+    },
+    'Emergency': {
+      name: 'Emergency Department',
+      totalBeds: 15,
+      available: 3,
+      occupied: 11,
+      maintenance: 1,
+      beds: Array.from({ length: 15 }, (_, i) => ({
+        id: `ER-${i + 1}`,
+        number: i + 1,
+        status: i < 11 ? 'occupied' : i < 14 ? 'available' : 'maintenance',
+        patient: i < 11 ? `Emergency Patient ${i + 1}` : null,
+        lastUpdated: new Date()
+      }))
+    },
+    'Maternity': {
+      name: 'Maternity Ward',
+      totalBeds: 25,
+      available: 8,
+      occupied: 15,
+      maintenance: 2,
+      beds: Array.from({ length: 25 }, (_, i) => ({
+        id: `MAT-${i + 1}`,
+        number: i + 1,
+        status: i < 15 ? 'occupied' : i < 23 ? 'available' : 'maintenance',
+        patient: i < 15 ? `Mother ${i + 1}` : null,
+        lastUpdated: new Date()
+      }))
+    },
+    'Pediatric': {
+      name: 'Pediatric Ward',
+      totalBeds: 30,
+      available: 12,
+      occupied: 16,
+      maintenance: 2,
+      beds: Array.from({ length: 30 }, (_, i) => ({
+        id: `PED-${i + 1}`,
+        number: i + 1,
+        status: i < 16 ? 'occupied' : i < 28 ? 'available' : 'maintenance',
+        patient: i < 16 ? `Child Patient ${i + 1}` : null,
+        lastUpdated: new Date()
+      }))
+    }
+  });
+
+  // Real-time updates for bed status
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBedData(prevData => {
+        const newData = { ...prevData };
+        
+        // Simulate some bed status changes
+        Object.keys(newData).forEach(wardKey => {
+          const ward = newData[wardKey];
+          const beds = [...ward.beds];
+          
+          // Randomly change 1-2 bed statuses
+          const changeCount = Math.floor(Math.random() * 3);
+          for (let i = 0; i < changeCount; i++) {
+            const randomBedIndex = Math.floor(Math.random() * beds.length);
+            const currentStatus = beds[randomBedIndex].status;
+            
+            // Cycle through statuses
+            if (currentStatus === 'available' && Math.random() > 0.7) {
+              beds[randomBedIndex].status = 'occupied';
+              beds[randomBedIndex].patient = `New Patient ${Date.now()}`;
+            } else if (currentStatus === 'occupied' && Math.random() > 0.8) {
+              beds[randomBedIndex].status = 'available';
+              beds[randomBedIndex].patient = null;
+            }
+            beds[randomBedIndex].lastUpdated = new Date();
+          }
+          
+          // Recalculate counts
+          const available = beds.filter(bed => bed.status === 'available').length;
+          const occupied = beds.filter(bed => bed.status === 'occupied').length;
+          const maintenance = beds.filter(bed => bed.status === 'maintenance').length;
+          
+          newData[wardKey] = {
+            ...ward,
+            beds,
+            available,
+            occupied,
+            maintenance
+          };
+        });
+        
+        return newData;
+      });
+    }, 30000); // Update every 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const getBedStatusColor = (status) => {
+    switch (status) {
+      case 'available': return 'bg-green-500';
+      case 'occupied': return 'bg-red-500';
+      case 'maintenance': return 'bg-yellow-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const getBedStatusBorderColor = (status) => {
+    switch (status) {
+      case 'available': return 'border-green-200 bg-green-50';
+      case 'occupied': return 'border-red-200 bg-red-50';
+      case 'maintenance': return 'border-yellow-200 bg-yellow-50';
+      default: return 'border-gray-200 bg-gray-50';
+    }
+  };
   return (
     <div className="medical-card dark:medical-card-dark max-w-6xl mx-auto">
       {/* Tab Navigation */}
@@ -972,6 +1114,200 @@ const tabs = [
               </div>
             )}
 </motion.div>
+        )}
+
+        {/* Bed Management */}
+        {activeTab === 'beds' && (
+          <motion.div
+            key="beds"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white mb-2">
+                Real-time Bed Management
+              </h3>
+              <p className="text-surface-600 dark:text-surface-400">
+                Monitor bed availability and room status across all hospital wards
+              </p>
+            </div>
+
+            {/* Overall Statistics */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              {Object.values(bedData).reduce((totals, ward) => {
+                totals.total += ward.totalBeds;
+                totals.available += ward.available;
+                totals.occupied += ward.occupied;
+                totals.maintenance += ward.maintenance;
+                return totals;
+              }, { total: 0, available: 0, occupied: 0, maintenance: 0 })}
+
+              <div className="bg-surface-50 dark:bg-surface-700 rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-surface-600 dark:text-surface-400">Total Beds</p>
+                    <p className="text-2xl font-bold text-surface-900 dark:text-white">
+                      {Object.values(bedData).reduce((sum, ward) => sum + ward.totalBeds, 0)}
+                    </p>
+                  </div>
+                  <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
+                    <ApperIcon name="Bed" className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-surface-50 dark:bg-surface-700 rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-surface-600 dark:text-surface-400">Available</p>
+                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                      {Object.values(bedData).reduce((sum, ward) => sum + ward.available, 0)}
+                    </p>
+                  </div>
+                  <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
+                    <ApperIcon name="UserCheck" className="h-6 w-6 text-green-600 dark:text-green-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-surface-50 dark:bg-surface-700 rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-surface-600 dark:text-surface-400">Occupied</p>
+                    <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+                      {Object.values(bedData).reduce((sum, ward) => sum + ward.occupied, 0)}
+                    </p>
+                  </div>
+                  <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full">
+                    <ApperIcon name="Users" className="h-6 w-6 text-red-600 dark:text-red-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-surface-50 dark:bg-surface-700 rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-surface-600 dark:text-surface-400">Maintenance</p>
+                    <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                      {Object.values(bedData).reduce((sum, ward) => sum + ward.maintenance, 0)}
+                    </p>
+                  </div>
+                  <div className="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-full">
+                    <ApperIcon name="Package" className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ward Details */}
+            <div className="space-y-6">
+              {Object.entries(bedData).map(([wardKey, ward]) => (
+                <div key={wardKey} className="bg-surface-50 dark:bg-surface-700 rounded-xl p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-primary/10 p-3 rounded-full">
+                        <ApperIcon name="Building2" className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-semibold text-surface-900 dark:text-white">
+                          {ward.name}
+                        </h4>
+                        <p className="text-sm text-surface-600 dark:text-surface-400">
+                          {ward.totalBeds} total beds • Last updated: {format(new Date(), 'MMM dd, yyyy HH:mm')}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
+                        Available: {ward.available}
+                      </span>
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 border border-red-200">
+                        Occupied: {ward.occupied}
+                      </span>
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 border border-yellow-200">
+                        Maintenance: {ward.maintenance}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Occupancy Rate */}
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium text-surface-700 dark:text-surface-300">
+                        Occupancy Rate
+                      </span>
+                      <span className="text-sm font-medium text-surface-700 dark:text-surface-300">
+                        {Math.round((ward.occupied / ward.totalBeds) * 100)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-surface-200 dark:bg-surface-600 rounded-full h-3">
+                      <div 
+                        className="bg-gradient-to-r from-green-500 to-red-500 h-3 rounded-full transition-all duration-500"
+                        style={{ width: `${(ward.occupied / ward.totalBeds) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Bed Grid */}
+                  <div className="grid grid-cols-5 sm:grid-cols-10 md:grid-cols-15 lg:grid-cols-20 gap-2">
+                    {ward.beds.map((bed) => (
+                      <motion.div
+                        key={bed.id}
+                        whileHover={{ scale: 1.1 }}
+                        className={`relative w-8 h-8 rounded-lg border-2 transition-all duration-200 cursor-pointer ${getBedStatusBorderColor(bed.status)}`}
+                        title={`Bed ${bed.number} - ${bed.status}${bed.patient ? ` (${bed.patient})` : ''}`}
+                      >
+                        <div className={`w-full h-full rounded-md ${getBedStatusColor(bed.status)}`}>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-xs font-bold text-white">
+                              {bed.number}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        {/* Status indicator dot */}
+                        <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getBedStatusColor(bed.status)}`} />
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Legend */}
+                  <div className="flex flex-wrap items-center justify-center gap-4 mt-4 pt-4 border-t border-surface-200 dark:border-surface-600">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-green-500 rounded"></div>
+                      <span className="text-sm text-surface-600 dark:text-surface-400">Available</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-red-500 rounded"></div>
+                      <span className="text-sm text-surface-600 dark:text-surface-400">Occupied</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-yellow-500 rounded"></div>
+                      <span className="text-sm text-surface-600 dark:text-surface-400">Maintenance</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Real-time Updates Notice */}
+            <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+              <div className="flex items-center space-x-3">
+                <div className="bg-blue-100 dark:bg-blue-900 p-2 rounded-full">
+                  <ApperIcon name="Clock" className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <h5 className="font-medium text-blue-900 dark:text-blue-100">Real-time Updates</h5>
+                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                    Bed status is automatically updated every 30 seconds. Last update: {format(new Date(), 'HH:mm:ss')}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
