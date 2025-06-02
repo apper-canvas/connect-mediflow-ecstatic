@@ -739,12 +739,13 @@ const tabs = [
                 <ApperIcon name="Activity" className="h-5 w-5 mr-2 text-primary" />
                 Recent Activity
               </h4>
-              <div className="space-y-3">
+<div className="space-y-3">
                 {patients.slice(-3).reverse().map((patient, index) => (
                   <div key={patient.id} className="flex items-center space-x-3 p-3 bg-white dark:bg-surface-800 rounded-lg">
                     <div className="bg-primary/10 p-2 rounded-full">
                       <ApperIcon name="UserCheck" className="h-4 w-4 text-primary" />
-<div className="flex-1">
+                    </div>
+                    <div className="flex-1">
                       <p className="text-sm font-medium text-surface-900 dark:text-white">
                         {patient.name} registered
                       </p>
