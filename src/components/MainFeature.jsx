@@ -746,10 +746,10 @@ Recent Activity
                       <ApperIcon name="UserCheck" className="h-4 w-4 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-surface-900 dark:text-white">
+<p className="text-sm font-medium text-surface-900 dark:text-white">
                         {patient.name} registered
                       </p>
-<p className="text-xs text-surface-500 dark:text-surface-400">
+                      <p className="text-xs text-surface-500 dark:text-surface-400">
                         {patient.department} • {format(new Date(patient.lastVisit), 'MMM dd, yyyy')}
                       </p>
                     </div>
