@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'react-toastify'
 import { format } from 'date-fns'
+import Chart from 'react-apexcharts'
 import ApperIcon from './ApperIcon'
-
 const MainFeature = () => {
   const [activeTab, setActiveTab] = useState('register')
-  const [patients, setPatients] = useState([
+const [patients, setPatients] = useState([
     {
       id: 'P001',
       name: 'Sarah Johnson',
@@ -14,7 +14,20 @@ const MainFeature = () => {
       condition: 'Hypertension',
       lastVisit: '2024-01-15',
       status: 'stable',
-      department: 'Cardiology'
+      department: 'Cardiology',
+      vitalSigns: [
+        { date: '2024-01-15', heartRate: 72, bloodPressureSys: 120, bloodPressureDia: 80, temperature: 98.6 },
+        { date: '2024-01-14', heartRate: 75, bloodPressureSys: 125, bloodPressureDia: 82, temperature: 98.4 },
+        { date: '2024-01-13', heartRate: 78, bloodPressureSys: 128, bloodPressureDia: 85, temperature: 98.8 },
+        { date: '2024-01-12', heartRate: 74, bloodPressureSys: 122, bloodPressureDia: 81, temperature: 98.5 },
+        { date: '2024-01-11', heartRate: 76, bloodPressureSys: 126, bloodPressureDia: 83, temperature: 98.7 }
+      ],
+      labResults: [
+        { id: 'L001', test: 'Cholesterol', value: 180, unit: 'mg/dL', status: 'stable', date: '2024-01-15', normalRange: '< 200' },
+        { id: 'L002', test: 'Blood Glucose', value: 95, unit: 'mg/dL', status: 'stable', date: '2024-01-15', normalRange: '70-100' },
+        { id: 'L003', test: 'Hemoglobin', value: 13.5, unit: 'g/dL', status: 'stable', date: '2024-01-14', normalRange: '12-16' },
+        { id: 'L004', test: 'White Blood Cells', value: 7.2, unit: 'K/μL', status: 'stable', date: '2024-01-14', normalRange: '4.5-11' }
+      ]
     },
     {
       id: 'P002', 
@@ -23,7 +36,19 @@ const MainFeature = () => {
       condition: 'Diabetes Type 2',
       lastVisit: '2024-01-14',
       status: 'monitoring',
-      department: 'Endocrinology'
+      department: 'Endocrinology',
+      vitalSigns: [
+        { date: '2024-01-14', heartRate: 68, bloodPressureSys: 118, bloodPressureDia: 78, temperature: 98.2 },
+        { date: '2024-01-13', heartRate: 70, bloodPressureSys: 120, bloodPressureDia: 80, temperature: 98.4 },
+        { date: '2024-01-12', heartRate: 72, bloodPressureSys: 115, bloodPressureDia: 76, temperature: 98.1 },
+        { date: '2024-01-11', heartRate: 69, bloodPressureSys: 117, bloodPressureDia: 77, temperature: 98.3 },
+        { date: '2024-01-10', heartRate: 71, bloodPressureSys: 119, bloodPressureDia: 79, temperature: 98.5 }
+      ],
+      labResults: [
+        { id: 'L005', test: 'HbA1c', value: 7.2, unit: '%', status: 'monitoring', date: '2024-01-14', normalRange: '< 7%' },
+        { id: 'L006', test: 'Fasting Glucose', value: 145, unit: 'mg/dL', status: 'monitoring', date: '2024-01-14', normalRange: '70-100' },
+        { id: 'L007', test: 'Triglycerides', value: 165, unit: 'mg/dL', status: 'monitoring', date: '2024-01-13', normalRange: '< 150' }
+      ]
     },
     {
       id: 'P003',
@@ -32,7 +57,19 @@ const MainFeature = () => {
       condition: 'Asthma',
       lastVisit: '2024-01-13',
       status: 'critical',
-      department: 'Pulmonology'
+      department: 'Pulmonology',
+      vitalSigns: [
+        { date: '2024-01-13', heartRate: 95, bloodPressureSys: 140, bloodPressureDia: 90, temperature: 99.2 },
+        { date: '2024-01-12', heartRate: 98, bloodPressureSys: 145, bloodPressureDia: 92, temperature: 99.5 },
+        { date: '2024-01-11', heartRate: 92, bloodPressureSys: 138, bloodPressureDia: 88, temperature: 99.0 },
+        { date: '2024-01-10', heartRate: 90, bloodPressureSys: 135, bloodPressureDia: 85, temperature: 98.8 },
+        { date: '2024-01-09', heartRate: 88, bloodPressureSys: 132, bloodPressureDia: 82, temperature: 98.6 }
+      ],
+      labResults: [
+        { id: 'L008', test: 'Peak Flow', value: 250, unit: 'L/min', status: 'critical', date: '2024-01-13', normalRange: '400-700' },
+        { id: 'L009', test: 'Oxygen Saturation', value: 94, unit: '%', status: 'monitoring', date: '2024-01-13', normalRange: '95-100' },
+        { id: 'L010', test: 'C-Reactive Protein', value: 8.5, unit: 'mg/L', status: 'critical', date: '2024-01-12', normalRange: '< 3.0' }
+      ]
     }
   ])
 
@@ -124,10 +161,11 @@ const MainFeature = () => {
     }
   }
 
-  const tabs = [
+const tabs = [
     { id: 'register', label: 'Register Patient', icon: 'UserPlus' },
     { id: 'search', label: 'Patient Records', icon: 'Search' },
-    { id: 'analytics', label: 'Quick Stats', icon: 'BarChart3' }
+    { id: 'analytics', label: 'Quick Stats', icon: 'BarChart3' },
+    { id: 'charts', label: 'Charts & Trends', icon: 'TrendingUp' }
   ]
 
   return (
@@ -553,11 +591,367 @@ const MainFeature = () => {
             </div>
           </motion.div>
         )}
+{/* Charts and Trends */}
+        {activeTab === 'charts' && (
+          <motion.div
+            key="charts"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white mb-2">
+                Charts & Trends
+              </h3>
+              <p className="text-surface-600 dark:text-surface-400">
+                Visualize patient vital signs and lab results trends over time
+              </p>
+            </div>
+
+            {/* Chart Type Selector */}
+            <div className="flex flex-wrap gap-4 mb-6">
+              <div className="bg-surface-50 dark:bg-surface-700 rounded-xl p-4 flex-1 min-w-[250px]">
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                  Select Patient
+                </label>
+                <select
+                  value={selectedPatient?.id || ''}
+                  onChange={(e) => {
+                    const patient = patients.find(p => p.id === e.target.value)
+                    setSelectedPatient(patient || null)
+                  }}
+                  className="input-field dark:bg-surface-800 dark:border-surface-600 dark:text-white"
+                >
+                  <option value="">Select a patient...</option>
+                  {patients.map(patient => (
+                    <option key={patient.id} value={patient.id}>
+                      {patient.name} - {patient.condition}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {selectedPatient ? (
+              <div className="space-y-6">
+                {/* Vital Signs Chart */}
+                <div className="bg-surface-50 dark:bg-surface-700 rounded-xl p-6">
+                  <h4 className="text-lg font-semibold text-surface-900 dark:text-white mb-4 flex items-center">
+                    <ApperIcon name="Activity" className="h-5 w-5 mr-2 text-primary" />
+                    Vital Signs Trends
+                  </h4>
+                  
+                  <div className="mb-4">
+                    <div className="bg-white dark:bg-surface-800 rounded-lg p-4">
+                      <Chart
+                        options={{
+                          chart: {
+                            id: 'vital-signs',
+                            type: 'line',
+                            height: 350,
+                            toolbar: {
+                              show: true,
+                              tools: {
+                                download: true,
+                                selection: false,
+                                zoom: true,
+                                zoomin: true,
+                                zoomout: true,
+                                pan: false,
+                                reset: true
+                              }
+                            },
+                            background: 'transparent'
+                          },
+                          theme: {
+                            mode: 'light'
+                          },
+                          colors: ['#0EA5E9', '#10B981', '#F59E0B'],
+                          stroke: {
+                            curve: 'smooth',
+                            width: 3
+                          },
+                          grid: {
+                            borderColor: '#e2e8f0',
+                            strokeDashArray: 3
+                          },
+                          xaxis: {
+                            categories: selectedPatient.vitalSigns?.map(vs => format(new Date(vs.date), 'MMM dd')) || [],
+                            labels: {
+                              style: {
+                                colors: '#64748b'
+                              }
+                            }
+                          },
+                          yaxis: [
+                            {
+                              title: {
+                                text: 'Heart Rate (BPM)',
+                                style: {
+                                  color: '#64748b'
+                                }
+                              },
+                              labels: {
+                                style: {
+                                  colors: '#64748b'
+                                }
+                              }
+                            },
+                            {
+                              opposite: true,
+                              title: {
+                                text: 'Blood Pressure (mmHg)',
+                                style: {
+                                  color: '#64748b'
+                                }
+                              },
+                              labels: {
+                                style: {
+                                  colors: '#64748b'
+                                }
+                              }
+                            },
+                            {
+                              opposite: true,
+                              title: {
+                                text: 'Temperature (°F)',
+                                style: {
+                                  color: '#64748b'
+                                }
+                              },
+                              labels: {
+                                style: {
+                                  colors: '#64748b'
+                                }
+                              }
+                            }
+                          ],
+                          legend: {
+                            position: 'top',
+                            horizontalAlign: 'right',
+                            labels: {
+                              colors: '#64748b'
+                            }
+                          },
+                          tooltip: {
+                            shared: true,
+                            intersect: false,
+                            y: {
+                              formatter: function(value, { seriesIndex }) {
+                                if (seriesIndex === 0) return value + ' BPM'
+                                if (seriesIndex === 1) return value + ' mmHg'
+                                if (seriesIndex === 2) return value + '°F'
+                                return value
+                              }
+                            }
+                          },
+                          markers: {
+                            size: 6,
+                            strokeWidth: 2,
+                            hover: {
+                              size: 8
+                            }
+                          }
+                        }}
+                        series={[
+                          {
+                            name: 'Heart Rate',
+                            data: selectedPatient.vitalSigns?.map(vs => vs.heartRate) || [],
+                            yAxisIndex: 0
+                          },
+                          {
+                            name: 'Systolic BP',
+                            data: selectedPatient.vitalSigns?.map(vs => vs.bloodPressureSys) || [],
+                            yAxisIndex: 1
+                          },
+                          {
+                            name: 'Temperature',
+                            data: selectedPatient.vitalSigns?.map(vs => vs.temperature) || [],
+                            yAxisIndex: 2
+                          }
+                        ]}
+                        type="line"
+                        height={350}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Vital Signs Summary Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {selectedPatient.vitalSigns && selectedPatient.vitalSigns.length > 0 && (
+                      <>
+                        <div className="bg-white dark:bg-surface-800 rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm text-surface-600 dark:text-surface-400">Latest Heart Rate</p>
+                              <p className="text-2xl font-bold text-surface-900 dark:text-white">
+                                {selectedPatient.vitalSigns[0].heartRate} <span className="text-sm font-normal">BPM</span>
+                              </p>
+                            </div>
+                            <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
+                              <ApperIcon name="Heart" className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-white dark:bg-surface-800 rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm text-surface-600 dark:text-surface-400">Latest Blood Pressure</p>
+                              <p className="text-2xl font-bold text-surface-900 dark:text-white">
+                                {selectedPatient.vitalSigns[0].bloodPressureSys}/{selectedPatient.vitalSigns[0].bloodPressureDia}
+                              </p>
+                            </div>
+                            <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
+                              <ApperIcon name="Activity" className="h-6 w-6 text-green-600 dark:text-green-400" />
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-white dark:bg-surface-800 rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm text-surface-600 dark:text-surface-400">Latest Temperature</p>
+                              <p className="text-2xl font-bold text-surface-900 dark:text-white">
+                                {selectedPatient.vitalSigns[0].temperature}°F
+                              </p>
+                            </div>
+                            <div className="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-full">
+                              <ApperIcon name="Thermometer" className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Lab Results Chart */}
+                {selectedPatient.labResults && selectedPatient.labResults.length > 0 && (
+                  <div className="bg-surface-50 dark:bg-surface-700 rounded-xl p-6">
+                    <h4 className="text-lg font-semibold text-surface-900 dark:text-white mb-4 flex items-center">
+                      <ApperIcon name="TestTube" className="h-5 w-5 mr-2 text-primary" />
+                      Lab Results Overview
+                    </h4>
+                    
+                    <div className="bg-white dark:bg-surface-800 rounded-lg p-4 mb-4">
+                      <Chart
+                        options={{
+                          chart: {
+                            id: 'lab-results',
+                            type: 'bar',
+                            height: 300,
+                            toolbar: {
+                              show: true
+                            },
+                            background: 'transparent'
+                          },
+                          plotOptions: {
+                            bar: {
+                              borderRadius: 8,
+                              horizontal: false,
+                              columnWidth: '60%'
+                            }
+                          },
+                          colors: ['#0EA5E9', '#10B981', '#F59E0B', '#EF4444'],
+                          dataLabels: {
+                            enabled: true,
+                            formatter: function(val, opts) {
+                              const test = selectedPatient.labResults[opts.dataPointIndex]
+                              return val + ' ' + test.unit
+                            }
+                          },
+                          xaxis: {
+                            categories: selectedPatient.labResults.map(result => result.test),
+                            labels: {
+                              style: {
+                                colors: '#64748b'
+                              }
+                            }
+                          },
+                          yaxis: {
+                            title: {
+                              text: 'Test Values',
+                              style: {
+                                color: '#64748b'
+                              }
+                            },
+                            labels: {
+                              style: {
+                                colors: '#64748b'
+                              }
+                            }
+                          },
+                          grid: {
+                            borderColor: '#e2e8f0',
+                            strokeDashArray: 3
+                          },
+                          tooltip: {
+                            y: {
+                              formatter: function(value, { dataPointIndex }) {
+                                const result = selectedPatient.labResults[dataPointIndex]
+                                return `${value} ${result.unit} (Normal: ${result.normalRange})`
+                              }
+                            }
+                          }
+                        }}
+                        series={[
+                          {
+                            name: 'Test Results',
+                            data: selectedPatient.labResults.map(result => result.value)
+                          }
+                        ]}
+                        type="bar"
+                        height={300}
+                      />
+                    </div>
+
+                    {/* Lab Results Details */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {selectedPatient.labResults.map((result) => (
+                        <div key={result.id} className="bg-white dark:bg-surface-800 rounded-lg p-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <h5 className="font-medium text-surface-900 dark:text-white">{result.test}</h5>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(result.status)}`}>
+                              {result.status}
+                            </span>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-lg font-bold text-surface-900 dark:text-white">
+                              {result.value} {result.unit}
+                            </p>
+                            <p className="text-xs text-surface-500 dark:text-surface-400">
+                              Normal range: {result.normalRange}
+                            </p>
+                            <p className="text-xs text-surface-500 dark:text-surface-400">
+                              Date: {format(new Date(result.date), 'MMM dd, yyyy')}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <ApperIcon name="TrendingUp" className="h-16 w-16 text-surface-400 mx-auto mb-4" />
+                <h4 className="text-lg font-semibold text-surface-600 dark:text-surface-400 mb-2">
+                  Select a Patient to View Charts
+                </h4>
+                <p className="text-surface-500 dark:text-surface-400">
+                  Choose a patient from the dropdown above to visualize their vital signs and lab results trends.
+                </p>
+              </div>
+            )}
+</motion.div>
+        )}
       </AnimatePresence>
 
       {/* Patient Detail Modal */}
       <AnimatePresence>
-        {selectedPatient && (
+        {selectedPatient && activeTab !== 'charts' && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -632,7 +1026,7 @@ const MainFeature = () => {
 
                 <div className="bg-surface-50 dark:bg-surface-700 p-4 rounded-xl">
                   <p className="text-sm font-medium text-surface-600 dark:text-surface-400 mb-2">Last Visit</p>
-<p className="text-surface-900 dark:text-white">
+                  <p className="text-surface-900 dark:text-white">
                     {format(new Date(selectedPatient.lastVisit), 'MMMM dd, yyyy')}
                   </p>
                 </div>
@@ -646,7 +1040,7 @@ const MainFeature = () => {
                     </h5>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {selectedPatient.labResults.map((result) => (
-<div key={result.id} className="bg-white dark:bg-surface-800 rounded-lg p-3">
+                        <div key={result.id} className="bg-white dark:bg-surface-800 rounded-lg p-3">
                           <div className="flex justify-between items-center mb-2">
                             <span className="font-medium text-surface-900 dark:text-white">{result.test}</span>
                             <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(result.status)}`}>
@@ -666,7 +1060,7 @@ const MainFeature = () => {
                     </div>
                   </div>
                 )}
-</div>
+              </div>
             </motion.div>
           </motion.div>
         )}
