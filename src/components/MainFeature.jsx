@@ -737,9 +737,9 @@ const tabs = [
             <div className="mt-6 bg-surface-50 dark:bg-surface-700 rounded-xl p-6">
               <h4 className="text-lg font-semibold text-surface-900 dark:text-white mb-4 flex items-center">
                 <ApperIcon name="Activity" className="h-5 w-5 mr-2 text-primary" />
-                Recent Activity
+Recent Activity
               </h4>
-<div className="space-y-3">
+              <div className="space-y-3">
                 {patients.slice(-3).reverse().map((patient, index) => (
                   <div key={patient.id} className="flex items-center space-x-3 p-3 bg-white dark:bg-surface-800 rounded-lg">
                     <div className="bg-primary/10 p-2 rounded-full">
