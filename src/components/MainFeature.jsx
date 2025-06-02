@@ -752,13 +752,14 @@ const tabs = [
                       <p className="text-xs text-surface-500 dark:text-surface-400">
                         {patient.department} • {format(new Date(patient.lastVisit), 'MMM dd, yyyy')}
                       </p>
-                    </div>
+</div>
                   </div>
                 ))}
               </div>
             </div>
           </motion.div>
         )}
+
         {/* Charts and Trends */}
         {activeTab === 'charts' && (
           <motion.div
