@@ -632,11 +632,41 @@ const MainFeature = () => {
 
                 <div className="bg-surface-50 dark:bg-surface-700 p-4 rounded-xl">
                   <p className="text-sm font-medium text-surface-600 dark:text-surface-400 mb-2">Last Visit</p>
-                  <p className="text-surface-900 dark:text-white">
+<p className="text-surface-900 dark:text-white">
                     {format(new Date(selectedPatient.lastVisit), 'MMMM dd, yyyy')}
                   </p>
                 </div>
-              </div>
+
+                {/* Lab Results Section */}
+                {selectedPatient.labResults && selectedPatient.labResults.length > 0 && (
+                  <div className="bg-surface-50 dark:bg-surface-700 p-4 rounded-xl">
+                    <h5 className="text-lg font-semibold text-surface-900 dark:text-white mb-4 flex items-center">
+                      <ApperIcon name="TestTube" className="h-5 w-5 mr-2 text-primary" />
+                      Recent Lab Results
+                    </h5>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {selectedPatient.labResults.map((result) => (
+<div key={result.id} className="bg-white dark:bg-surface-800 rounded-lg p-3">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="font-medium text-surface-900 dark:text-white">{result.test}</span>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(result.status)}`}>
+                              {result.status}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-lg font-bold text-surface-900 dark:text-white">
+                              {result.value} {result.unit}
+                            </span>
+                            <span className="text-xs text-surface-500 dark:text-surface-400">
+                              {format(new Date(result.date), 'MMM dd')}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+</div>
             </motion.div>
           </motion.div>
         )}
