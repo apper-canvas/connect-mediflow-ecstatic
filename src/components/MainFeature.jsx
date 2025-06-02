@@ -744,12 +744,11 @@ const tabs = [
                   <div key={patient.id} className="flex items-center space-x-3 p-3 bg-white dark:bg-surface-800 rounded-lg">
                     <div className="bg-primary/10 p-2 rounded-full">
                       <ApperIcon name="UserCheck" className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="flex-1">
+<div className="flex-1">
                       <p className="text-sm font-medium text-surface-900 dark:text-white">
                         {patient.name} registered
                       </p>
-<p className="text-xs text-surface-500 dark:text-surface-400">
+                      <p className="text-xs text-surface-500 dark:text-surface-400">
                         {patient.department} • {format(new Date(patient.lastVisit), 'MMM dd, yyyy')}
                       </p>
                     </div>
