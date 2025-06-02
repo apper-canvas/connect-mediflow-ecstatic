@@ -1,12 +1,39 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { toast } from 'react-toastify'
-import { format } from 'date-fns'
-import Chart from 'react-apexcharts'
-import ApperIcon from './ApperIcon'
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-toastify';
+import { Users, Calendar, UserCheck, Package, Plus, Edit, Trash2, Eye, Search, TrendingUp, Activity, Heart, Thermometer, BarChart3, Building, Bed, MapPin, Clock, User, Phone, TestTube, PieChart, Building2, X, UserPlus, Stethoscope } from 'lucide-react';
+import Chart from 'react-apexcharts';
+
+// Simple date formatting function
+const format = (date, formatStr) => {
+  const d = new Date(date);
+  if (formatStr === 'yyyy-MM-dd') {
+    return d.toISOString().split('T')[0];
+  } else if (formatStr === 'MMM dd, yyyy') {
+    return d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+  } else if (formatStr === 'MMMM dd, yyyy') {
+    return d.toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' });
+  } else if (formatStr === 'MMM dd') {
+    return d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+  }
+  return d.toLocaleDateString();
+};
+
+// Icon component wrapper
+const ApperIcon = ({ name, className }) => {
+  const IconMap = {
+    User, Users, Calendar, UserCheck, Package, Plus, Edit, Trash2, Eye, Search, 
+    TrendingUp, Activity, Heart, Thermometer, BarChart3, Building, Bed, MapPin, 
+    Clock, Phone, TestTube, PieChart, Building2, X, UserPlus, Stethoscope
+  };
+  const IconComponent = IconMap[name] || User;
+  return <IconComponent className={className} />;
+};
+
 const MainFeature = () => {
-  const [activeTab, setActiveTab] = useState('register')
-const [patients, setPatients] = useState([
+  const [activeTab, setActiveTab] = useState('register');
+  
+  const [patients, setPatients] = useState([
     {
       id: 'P001',
       name: 'Sarah Johnson',
@@ -71,7 +98,7 @@ const [patients, setPatients] = useState([
         { id: 'L010', test: 'C-Reactive Protein', value: 8.5, unit: 'mg/L', status: 'critical', date: '2024-01-12', normalRange: '< 3.0' }
       ]
     }
-  ])
+  ]);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -166,8 +193,7 @@ const tabs = [
     { id: 'search', label: 'Patient Records', icon: 'Search' },
     { id: 'analytics', label: 'Quick Stats', icon: 'BarChart3' },
     { id: 'charts', label: 'Charts & Trends', icon: 'TrendingUp' }
-  ]
-
+  ];
   return (
     <div className="medical-card dark:medical-card-dark max-w-6xl mx-auto">
       {/* Tab Navigation */}
@@ -1069,4 +1095,4 @@ const tabs = [
   )
 }
 
-export default MainFeature
+export default MainFeature;
