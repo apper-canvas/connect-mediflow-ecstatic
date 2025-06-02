@@ -755,9 +755,9 @@ const tabs = [
                     </div>
                   </div>
                 ))}
-              </div>
+</div>
             </div>
-</motion.div>
+          </motion.div>
         )}
 
         {/* Charts and Trends */}
