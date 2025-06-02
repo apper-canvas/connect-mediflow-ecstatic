@@ -757,9 +757,10 @@ const tabs = [
                 ))}
               </div>
             </div>
-          </motion.div>
+</motion.div>
         )}
-{/* Charts and Trends */}
+
+        {/* Charts and Trends */}
         {activeTab === 'charts' && (
           <motion.div
             key="charts"
